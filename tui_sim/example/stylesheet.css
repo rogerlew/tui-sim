@@ -1,0 +1,10 @@
+
+Button {
+    margin: 1 2;
+}
+
+.panel {
+    border: round white;
+    height: 100%;
+    overflow-y: hidden;
+}
