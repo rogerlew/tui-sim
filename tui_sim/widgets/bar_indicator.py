@@ -97,9 +97,11 @@ class BarIndicator(Widget):
     def __init__(self, name: str, value: float, units='', ndigits=2,
                  xmin=None, xmax=None,
                  lowlow=None, low=None, high=None, highhigh=None,
-                 classes=''):
+                 id: str | None = None,
+                 classes: str | None = None):
 
-        self._classes = classes
+        super().__init__(name=name, id=id, classes=classes)
+
         self.value = round(value, ndigits)
         self.units = units
         self.ndigits = ndigits
@@ -110,8 +112,6 @@ class BarIndicator(Widget):
         self.lowlow = lowlow
         self.highhigh = highhigh
         self.widgets = []
-
-        super().__init__(name=name)
 
     def compose(self) -> ComposeResult:
         value = self.value

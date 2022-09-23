@@ -36,15 +36,18 @@ class SimpleIndicator(Widget):
     }
     """
 
-    def __init__(self,  value: float, units='', ndigits=0, classes=''):
+    def __init__(self,  value: float, units='', ndigits=0,
+                 *,
+                 name: str | None = None,
+                 id: str | None = None,
+                 classes: str | None = None,
+    ) -> None:
+        super().__init__(name=name, id=id, classes=classes)
 
-        self._classes = classes
         self.value = round(value, ndigits)
         self.units = units
         self.ndigits = ndigits
         self.widgets = []
-
-        super().__init__()
 
     def compose(self) -> ComposeResult:
 

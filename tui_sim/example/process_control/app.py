@@ -34,32 +34,20 @@ class TuiSim(Widget):
     def compose(self) -> ComposeResult:
         yield self.status
 
-        self.a_low = AlarmTile('A LOW (WITH A VERY VERY LONG TITLE)', 0)
-        self.a_high = AlarmTile('A HIGH', 0)
-        self.b_low = AlarmTile('B LOW', 0)
-        self.b_high = AlarmTile('B HIGH', 0)
-
-        self.a = BarIndicator('', self.model.a, units='V', xmin=-100, xmax=100, low=-100, high=100)
-        self.b = BarIndicator('', self.model.b, units='V', xmin=-100, xmax=100, low=-100, high=100)
-
-        self.a_vel = SimpleIndicator(self.model.a_vel, 'V/s')
-        self.b_vel = SimpleIndicator(self.model.b_vel, 'V/s')
-
-
         yield layout.Vertical(
-            self.a_low,
-            self.a_high,
-            self.a,
-            self.a_vel,
+            AlarmTile('A LOW (WITH A VERY VERY LONG TITLE)', 0, id='a_low'),
+            AlarmTile('A HIGH', 0, id='a_high'),
+            BarIndicator('', self.model.a, units='V', xmin=-100, xmax=100, low=-100, high=100, id='a'),
+            SimpleIndicator(self.model.a_vel, 'V/s', id='a_vel'),
             Button('flip', id='flip_a'),
             classes='panel'
         )
 
         yield layout.Vertical(
-            self.b_low,
-            self.b_high,
-            self.b,
-            self.b_vel,
+            AlarmTile('B LOW', 0, id='b_low'),
+            AlarmTile('B HIGH', 0, id='b_high'),
+            BarIndicator('', self.model.a, units='V', xmin=-100, xmax=100, low=-100, high=100, id='b'),
+            SimpleIndicator(self.model.a_vel, 'V/s', id='b_vel'),
             Button('flip', id='flip_b'),
             classes='panel'
         )
@@ -68,17 +56,17 @@ class TuiSim(Widget):
         model = self.model
         model.step()
 
-        self.a.update(model.a)
-        self.a_vel.update(model.a_vel)
+        self.query_one('#a').update(model.a)
+        self.query_one('#a_vel').update(model.a_vel)
 
-        self.b.update(model.b)
-        self.b_vel.update(model.b_vel)
+        self.query_one('#b').update(model.b)
+        self.query_one('#b_vel').update(model.b_vel)
 
-        self.a_low.update(model.alarm_low_a)
-        self.a_high.update(model.alarm_high_a)
+        self.query_one('#a_low').update(model.alarm_low_a)
+        self.query_one('#a_high').update(model.alarm_high_a)
 
-        self.b_low.update(model.alarm_low_b)
-        self.b_high.update(model.alarm_high_b)
+        self.query_one('#b_low').update(model.alarm_low_b)
+        self.query_one('#b_high').update(model.alarm_high_b)
 
         self.update_status()
 

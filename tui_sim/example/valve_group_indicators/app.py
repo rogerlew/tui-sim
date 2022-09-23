@@ -31,13 +31,12 @@ class TuiSim(Widget):
         super().__init__()
 
     def compose(self) -> ComposeResult:
-        self.indicator = ValveGroupIndicator(self.model.x, label='Valves')
-        yield self.indicator
+        yield ValveGroupIndicator(self.model.x, label='Valves', id='valves')
         yield self.status
 
     def step(self) -> None:
         self.model.step()
-        self.indicator.update(self.model.x)
+        self.query_one('#valves').update(self.model.x)
         self.update_status()
 
     def is_running(self) -> bool:
