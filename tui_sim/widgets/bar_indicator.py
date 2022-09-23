@@ -2,20 +2,11 @@ from __future__ import annotations
 
 from rich.console import RenderableType
 
-from textual.app import App, ComposeResult
+from textual.app import ComposeResult
 from textual.widgets import Static
 from textual.widget import Widget
 
-def clip(x, a_min: None | float, a_max: None | float):
-    if a_min is not None:
-        if x < a_min:
-            return a_min
-
-    if a_max is not None:
-        if x > a_max:
-            return a_max
-
-    return x
+from tui_sim.utils import clip, determine_alarm_state
 
 
 class ProgressBar(Widget):
@@ -59,7 +50,7 @@ class ProgressBar(Widget):
 
         width, height = self.container_size
         pct = completed / total
-        halves = int(clip(round(width *pct *2), 0, width *2))
+        halves = int(clip(round(width * pct * 2), 0, width * 2))
         filled = _bar_ * (halves//2)
         if halves % 2:
             filled += _bar
@@ -73,28 +64,6 @@ class ProgressBar(Widget):
         self.completed = completed
         self.alarm_state = alarm_state
         self.refresh(layout=True)
-
-
-def determine_alarm_state(value, lowlow, low, high, highhigh):
-    alarm_state = 0
-
-    if lowlow is not None:
-        if value < lowlow:
-            alarm_state = 2
-
-    if highhigh is not None:
-        if value > highhigh:
-            alarm_state = 2
-
-    if low is not None:
-        if value < low:
-            alarm_state = 1
-
-    if high is not None:
-        if value > high:
-            alarm_state = 1
-
-    return alarm_state
 
 
 class BarIndicator(Widget):
@@ -152,23 +121,23 @@ class BarIndicator(Widget):
         self.widgets.append(Static(str(self.name), classes='label'))
         yield self.widgets[-1]
 
-        self.widgets.append(Static(f'{self.value:.0f} ', classes='indicator'))
+        self.widgets.append(Static(f'{self.value} ', classes='indicator'))
         yield self.widgets[-1]
 
         self.widgets.append(Static(f' {self.units}', classes='units'))
         yield self.widgets[-1]
 
         if xmin is not None and xmax is not None:
-            pct = clip((value - xmin) /(xmax - xmin), 0.0, 1.0)
+            pct = clip((value - xmin) / (xmax - xmin), 0.0, 1.0)
             self.widgets.append(ProgressBar(total=1, completed=pct, alarm_state=alarm_state))
             yield self.widgets[-1]
 
-    def update_value(self, value):
+    def update(self, value):
         self.value = round(value, self.ndigits)
         xmin, xmax = self.xmin, self.xmax
         alarm_state = determine_alarm_state(value, self.lowlow, self.low, self.high, self.highhigh)
 
         self.widgets[1].update(f'{self.value}')
         if xmin is not None and xmax is not None:
-            pct = clip((value -xmin ) /(xmax -xmin), 0.0, 1.0)
+            pct = clip((value - xmin) / (xmax - xmin), 0.0, 1.0)
             self.widgets[3].update(completed=pct, alarm_state=alarm_state)

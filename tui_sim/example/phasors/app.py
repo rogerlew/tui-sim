@@ -8,7 +8,7 @@ from textual.widgets import Header, Button
 from textual.widget import Widget
 
 import sys
-sys.path.append('../../')
+sys.path.append('../../../')
 
 from tui_sim.widgets.bar_indicator import BarIndicator
 from tui_sim.widgets.static_footer import StaticFooter
@@ -48,7 +48,7 @@ class TuiSim(Widget):
         model.step()
         values = model.values
         for v, p_ind in zip(values, self.phasor_indicators):
-            p_ind.update_value(v)
+            p_ind.update(v)
 
         self.update_status()
 
