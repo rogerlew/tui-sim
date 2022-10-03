@@ -41,6 +41,7 @@ class GroupIndicator(Widget):
         low: float | None = None,
         high: float | None = None,
         highhigh: float | None = None,
+        attrs: Iterable[str] | None = None,
         *,
         name: str | None = None,
         id: str | None = None,
@@ -56,6 +57,7 @@ class GroupIndicator(Widget):
         self.low = low
         self.high = high
         self.highhigh = highhigh
+        self.attrs = attrs
         self.label = label
 
     def render(self) -> RenderableType:

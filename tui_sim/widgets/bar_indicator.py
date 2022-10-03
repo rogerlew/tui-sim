@@ -54,10 +54,10 @@ class ProgressBar(Widget):
         filled = _bar_ * (halves//2)
         if halves % 2:
             filled += _bar
-            empty = _bar_
+            empty = " "  # _bar_
         else:
-            empty = bar_
-        empty += _bar_ * (width - len(filled) - 1)
+            empty = " "  # bar_
+        empty += " " * (width - len(filled) - 1)
         return f'[{color}]{filled}[/{color}][grey27]{empty}[/grey27]'
 
     def update(self, completed, alarm_state):
@@ -73,7 +73,6 @@ class BarIndicator(Widget):
         layout: grid;
         grid-size: 4;
         grid-columns: 2fr 1fr 1fr 4fr;
-        background: $panel;
         height: 1;
         width: 100%;
         margin: 0;
@@ -97,6 +96,7 @@ class BarIndicator(Widget):
     def __init__(self, name: str, value: float, units='', ndigits=2,
                  xmin=None, xmax=None,
                  lowlow=None, low=None, high=None, highhigh=None,
+                 attr: str | None = None,
                  id: str | None = None,
                  classes: str | None = None):
 
@@ -111,6 +111,7 @@ class BarIndicator(Widget):
         self.high = high
         self.lowlow = lowlow
         self.highhigh = highhigh
+        self.attr = attr
         self.widgets = []
 
     def compose(self) -> ComposeResult:

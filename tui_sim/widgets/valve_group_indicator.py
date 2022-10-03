@@ -35,6 +35,7 @@ class ValveGroupIndicator(Widget):
         self,
         x: List[float] | None = None,
         label: str = "",
+        attrs: Iterable[str] | None = None,
         *,
         name: str | None = None,
         id: str | None = None,
@@ -44,6 +45,7 @@ class ValveGroupIndicator(Widget):
         if x is None:
             x = []
         self.x = x
+        self.attrs = attrs
         self.label = label
 
     def render(self) -> RenderableType:

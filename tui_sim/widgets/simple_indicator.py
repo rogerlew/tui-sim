@@ -14,8 +14,7 @@ class SimpleIndicator(Widget):
     SimpleIndicator {
         layout: grid;
         grid-size: 4;
-        grid-columns: 1fr 1fr;
-        background: $panel;
+        grid-columns: 2fr 1fr 1fr 4fr;
         height: 1;
         width: 100%;
         margin: 0;
@@ -36,32 +35,39 @@ class SimpleIndicator(Widget):
     }
     """
 
-    def __init__(self,  value: float, units='', ndigits=0,
-                 *,
+    def __init__(self,
                  name: str | None = None,
+                 value: str | float | bool | None = '',
+                 units: str = '',
+                 ndigits: int = 0,
+                 attr: str | None = None,
+                 *,
                  id: str | None = None,
                  classes: str | None = None,
     ) -> None:
         super().__init__(name=name, id=id, classes=classes)
 
-        self.value = round(value, ndigits)
         self.units = units
         self.ndigits = ndigits
-        self.widgets = []
+        self._update(value)
+        self._value_widget = Static(f'{self.value} ', classes='indicator')
+        self._units_widget = Static(f' {self.units}', classes='units')
+        self.attr = attr
 
     def compose(self) -> ComposeResult:
+        yield Static(str(self.name), classes='label')
 
-        self.widgets.append(Static(f'{self.value} ', classes='indicator'))
-        yield self.widgets[-1]
+        yield self._value_widget
 
-        self.widgets.append(Static(f' {self.units}', classes='units'))
-        yield self.widgets[-1]
+        yield self._units_widget
 
-    def update(self, value):
+    def _update(self, value):
         ndigits = self.ndigits
         if isfloat(value) and ndigits is not None:
             self.value = round(value, ndigits)
         else:
             self.value = value
 
-        self.widgets[0].update(f'{self.value}')
+    def update(self, value):
+        self._update(value)
+        self._value_widget.update(f'{self.value}')
