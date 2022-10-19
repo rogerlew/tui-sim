@@ -243,7 +243,10 @@ class Button(Static, can_focus=True):
         return label
 
     def render(self) -> RenderableType:
-        label = self.label.copy()
+        try:
+            label = self.label.copy()
+        except AttributeError:
+            label = self.label 
         label = Text.assemble(" ", label, " ")
         label.stylize(self.text_style)
         return label
